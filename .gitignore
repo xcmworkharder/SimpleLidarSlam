@@ -1,0 +1,26 @@
+*/log/
+*/cmake-build-debug
+
+# Compiled object file
+*.o
+*.obj
+
+# prerequisites
+*.d
+
+# precompiled headers
+*.gch
+*.pch
+
+# compiled dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# compiled static libraries
+*.a
+
+# executable
+*.exe
+*.out
+*.app
