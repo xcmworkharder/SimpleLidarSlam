@@ -1,5 +1,7 @@
 */log/
 */cmake-build-debug
+*/idea
+*/*idea
 
 # Compiled object file
 *.o
