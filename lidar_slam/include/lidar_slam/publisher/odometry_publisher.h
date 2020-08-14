@@ -7,7 +7,7 @@
 #include <ros/ros.h>
 #include <nav_msgs/Odometry.h>
 
-namespace lidar_localization {
+namespace lidar_slam {
     class OdometryPublisher {
     public:
         OdometryPublisher(ros::NodeHandle& nh,

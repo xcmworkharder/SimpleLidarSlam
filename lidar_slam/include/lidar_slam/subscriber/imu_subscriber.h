@@ -6,7 +6,7 @@
 #include "sensor_msgs/Imu.h"
 #include "lidar_slam/sensor_data/imu_data.h"
 
-namespace lidar_localization {
+namespace lidar_slam {
     class IMUSubscriber {
     public:
         IMUSubscriber(ros::NodeHandle& nh, std::string topic_name, size_t buff_size);

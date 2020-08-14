@@ -10,7 +10,7 @@
 #include "lidar_slam/publisher/cloud_publisher.h"
 #include "lidar_slam/publisher/odometry_publisher.h"
 
-using namespace lidar_localization;
+using namespace lidar_slam;
 
 int main(int argc, char* argv[]) {
     google::InitGoogleLogging(argv[0]);

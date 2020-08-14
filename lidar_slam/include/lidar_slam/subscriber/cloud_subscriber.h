@@ -9,7 +9,7 @@
 #include <pcl_conversions/pcl_conversions.h>
 #include "lidar_slam/sensor_data/cloud_data.h"
 
-namespace lidar_localization {
+namespace lidar_slam {
     class CloudSubscriber {
     public:
         CloudSubscriber(ros::NodeHandle& nh, std::string topic_name, size_t buff_size);

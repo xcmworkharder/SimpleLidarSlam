@@ -7,7 +7,7 @@
 #include <pcl_conversions/pcl_conversions.h>
 #include "lidar_slam/sensor_data/cloud_data.h"
 
-namespace lidar_localization {
+namespace lidar_slam {
     class CloudPublisher {
     public:
         CloudPublisher(ros::NodeHandle& nh,

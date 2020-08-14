@@ -1,7 +1,7 @@
 #include "lidar_slam/subscriber/imu_subscriber.h"
 #include "glog/logging.h"
 
-namespace lidar_localization {
+namespace lidar_slam {
 
     IMUSubscriber::IMUSubscriber(ros::NodeHandle& nh,
                 std::string topic_name, size_t buff_size) : nh_(nh) {

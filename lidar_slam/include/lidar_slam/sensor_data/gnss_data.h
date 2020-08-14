@@ -9,7 +9,7 @@
 using std::vector;
 using std::string;
 
-namespace lidar_localization {
+namespace lidar_slam {
     class GNSSData {
     public:
         double time = 0.0;

@@ -1,6 +1,6 @@
 #include "lidar_slam/publisher/cloud_publisher.h"
 
-namespace lidar_localization {
+namespace lidar_slam {
     CloudPublisher::CloudPublisher(ros::NodeHandle& nh, std::string topic_name,
                                    size_t buff_size, std::string frame_id) : nh_(nh), frame_id_(frame_id) {
         publisher_ = nh_.advertise<sensor_msgs::PointCloud2>(topic_name, buff_size);

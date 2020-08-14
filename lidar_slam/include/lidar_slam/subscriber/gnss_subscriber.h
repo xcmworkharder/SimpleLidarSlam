@@ -6,7 +6,7 @@
 #include "sensor_msgs/NavSatFix.h"
 #include "lidar_slam/sensor_data/gnss_data.h"
 
-namespace lidar_localization {
+namespace lidar_slam {
     class GNSSSubscriber {
     public:
         GNSSSubscriber(ros::NodeHandle& nh, std::string topic_name, size_t buff_size);

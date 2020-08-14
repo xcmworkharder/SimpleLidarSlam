@@ -1,7 +1,7 @@
 #include "lidar_slam/tf_listener/tf_listener.h"
 #include <Eigen/Geometry>
 
-namespace lidar_localization {
+namespace lidar_slam {
 
     TFListener::TFListener(ros::NodeHandle& nh, std::string base_frame_id,
                            std::string child_frame_id)

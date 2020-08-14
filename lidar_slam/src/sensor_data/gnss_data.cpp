@@ -2,10 +2,10 @@
 #include "glog/logging.h"
 
 // 静态变量初始化
-bool lidar_localization::GNSSData::origin_position_inited = false;
-GeographicLib::LocalCartesian lidar_localization::GNSSData::geo_converter;
+bool lidar_slam::GNSSData::origin_position_inited = false;
+GeographicLib::LocalCartesian lidar_slam::GNSSData::geo_converter;
 
-namespace lidar_localization {
+namespace lidar_slam {
 
     void GNSSData::InitOriginPosition() {
         geo_converter.Reset(latitude, longitude, altitude);

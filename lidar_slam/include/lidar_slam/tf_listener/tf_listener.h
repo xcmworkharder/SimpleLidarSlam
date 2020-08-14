@@ -6,7 +6,7 @@
 #include <ros/ros.h>
 #include <tf/transform_listener.h>
 
-namespace lidar_localization {
+namespace lidar_slam {
     class TFListener {
     public:
         TFListener(ros::NodeHandle& nh, std::string base_frame_id,
