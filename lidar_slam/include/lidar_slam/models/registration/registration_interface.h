@@ -12,7 +12,6 @@
 namespace lidar_slam {
     class RegistrationInterface {
     public:
-    public:
         virtual ~RegistrationInterface() = default;
 
         virtual bool SetInputTarget(const CloudData::CLOUD_PTR& input_target) = 0;

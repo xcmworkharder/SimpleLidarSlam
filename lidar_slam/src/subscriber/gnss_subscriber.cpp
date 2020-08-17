@@ -10,7 +10,7 @@ namespace lidar_slam {
     }
 
     void GNSSSubscriber::msg_callback(
-            const sensor_msgs::NavSatFixConstPtr &nav_sat_fix_ptr) {
+            const sensor_msgs::NavSatFixConstPtr& nav_sat_fix_ptr) {
         GNSSData gnssData;
         gnssData.time = nav_sat_fix_ptr->header.stamp.toSec();
         gnssData.latitude = nav_sat_fix_ptr->latitude;

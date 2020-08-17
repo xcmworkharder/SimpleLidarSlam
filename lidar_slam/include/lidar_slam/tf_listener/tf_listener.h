@@ -9,8 +9,7 @@
 namespace lidar_slam {
     class TFListener {
     public:
-        TFListener(ros::NodeHandle& nh, std::string base_frame_id,
-                   std::string child_frame_id);
+        TFListener(ros::NodeHandle& nh, std::string base_frame_id, std::string child_frame_id);
         TFListener() = default;
 
         bool LookupData(Eigen::Matrix4f& transform_matrix);
@@ -18,7 +17,6 @@ namespace lidar_slam {
     private:
         bool TransformToMatrix(const tf::StampedTransform& transform,
                                Eigen::Matrix4f& transform_matrix);
-
     private:
         ros::NodeHandle nh_;
         tf::TransformListener listener_;

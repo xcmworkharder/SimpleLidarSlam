@@ -6,7 +6,7 @@ namespace lidar_slam {
         publisher_ = nh_.advertise<sensor_msgs::PointCloud2>(topic_name, buff_size);
     }
 
-    void CloudPublisher::Publish(CloudData::CLOUD_PTR cloud_ptr_input) {
+    void CloudPublisher::Publish(const CloudData::CLOUD_PTR cloud_ptr_input) {
         sensor_msgs::PointCloud2Ptr cloud_ptr_output(new sensor_msgs::PointCloud2());
         pcl::toROSMsg(*cloud_ptr_input, *cloud_ptr_output);
         cloud_ptr_output->header.stamp = ros::Time::now();

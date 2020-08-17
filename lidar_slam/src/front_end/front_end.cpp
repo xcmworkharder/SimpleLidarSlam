@@ -49,10 +49,10 @@ namespace lidar_slam {
             LOG(WARNING) << "文件夹 " << data_path_ << "未创建成功！";
             return false;
         } else {
-            LOG(WARNING) << "地图点云存放地址: " << data_path_;
+            LOG(INFO) << "地图点云存放地址: " << data_path_;
         }
 
-        std::string key_frame_path = data_path_ + "key_frames";
+        std::string key_frame_path = data_path_ + "/key_frames";
         boost::filesystem::create_directories(data_path_ + "/key_frames");
         if (!boost::filesystem::is_directory(key_frame_path)) {
             LOG(WARNING) << "文件夹: " << key_frame_path << "未创建成功！";
@@ -62,7 +62,6 @@ namespace lidar_slam {
         }
 
         return true;
-
     }
 
     bool FrontEnd::InitRegistration(std::shared_ptr<RegistrationInterface>& registration_ptr,
@@ -96,8 +95,7 @@ namespace lidar_slam {
         return true;
     }
 
-    bool FrontEnd::Update(const CloudData& cloud_data,
-                          Eigen::Matrix4f& cloud_pose) {
+    bool FrontEnd::Update(const CloudData& cloud_data, Eigen::Matrix4f& cloud_pose) {
         current_frame_.cloud_data.time = cloud_data.time;
         std::vector<int> indices;
         pcl::removeNaNFromPointCloud(*cloud_data.cloud_ptr,
@@ -115,7 +113,7 @@ namespace lidar_slam {
         /// 如果是第一帧，直接作为关键帧
         if (local_map_frames_.size() == 0) {
             current_frame_.pose = init_pose_;
-            UpdateNewFrame(current_frame_);
+            UpdateWithNewFrame(current_frame_);
             cloud_pose = current_frame_.pose;
             return true;
         }
@@ -133,8 +131,9 @@ namespace lidar_slam {
         /// 匹配之后根据距离判断是否生成新的关键帧，如果需要则进行更新,曼哈顿距离
         if (fabs(last_key_frame_pose(0, 3) - current_frame_.pose(0, 3)) +
             fabs(last_key_frame_pose(1, 3) - current_frame_.pose(1, 3)) +
-            fabs(last_key_frame_pose(1, 3) - current_frame_.pose(1, 3)) > 2.0) {
-            UpdateNewFrame(current_frame_);
+            fabs(last_key_frame_pose(2, 3) - current_frame_.pose(2, 3))
+                                                    > key_frame_distance_) {
+            UpdateWithNewFrame(current_frame_);
             last_key_frame_pose = current_frame_.pose;
         }
 
@@ -146,7 +145,7 @@ namespace lidar_slam {
         return true;
     }
 
-    bool FrontEnd::UpdateNewFrame(const Frame& new_key_frame) {
+    bool FrontEnd::UpdateWithNewFrame(const Frame& new_key_frame) {
         /// 把关键帧点云存储到硬盘中，节省内存
         std::string file_path = data_path_ + "/key_frames/key_frame_" +
                                 std::to_string(global_map_frames_.size()) +
@@ -162,8 +161,7 @@ namespace lidar_slam {
         /// 更新局部地图
         local_map_frames_.push_back(key_frame);
         /// 维护一个20的窗口
-        while (local_map_frames_.size() >
-               static_cast<size_t>(local_frame_num_)) {
+        while (local_map_frames_.size() > static_cast<size_t>(local_frame_num_)) {
             local_map_frames_.pop_front();
         }
         local_map_ptr_.reset(new CloudData::CLOUD());

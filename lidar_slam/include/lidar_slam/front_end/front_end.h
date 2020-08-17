@@ -40,7 +40,7 @@ namespace lidar_slam {
         bool InitFilter(std::string filter_user,
                         std::shared_ptr<CloudFilterInterface>& filter_ptr,
                         const YAML::Node& config_node);
-        bool UpdateNewFrame(const Frame& new_key_frame);
+        bool UpdateWithNewFrame(const Frame& new_key_frame);
 
     private:
         std::string data_path_ = "";

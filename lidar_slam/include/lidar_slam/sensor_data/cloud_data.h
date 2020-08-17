@@ -12,8 +12,7 @@ namespace lidar_slam {
         using CLOUD_PTR = CLOUD::Ptr;
 
     public:
-        CloudData()
-                :cloud_ptr(new CLOUD()) {
+        CloudData() : cloud_ptr(new CLOUD()) {
         }
 
     public:
