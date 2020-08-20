@@ -15,6 +15,7 @@
 #include "lidar_slam/publisher/cloud_publisher.h"
 #include "lidar_slam/publisher/odometry_publisher.h"
 #include "lidar_slam/front_end/front_end.h"
+#include "lidar_slam/models/scan_adjust/distortion_adjust.h"
 
 namespace lidar_slam {
     class FrontEndFlow {
@@ -64,6 +65,8 @@ namespace lidar_slam {
         CloudData::CLOUD_PTR current_scan_ptr_;
         Eigen::Matrix4f gnss_odometry_ = Eigen::Matrix4f::Identity();
         Eigen::Matrix4f laser_odometry_ = Eigen::Matrix4f::Identity();
+
+        std::shared_ptr<DistortionAdjust> distortion_adjust_ptr_;
     };
 }
 

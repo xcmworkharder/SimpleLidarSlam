@@ -13,7 +13,7 @@ namespace lidar_slam {
         velocity_sub_ptr_ = std::make_shared<VelocitySubscriber>(nh, "/kitti/oxts/gps/vel", 1000000);
         gnss_sub_ptr_ = std::make_shared<GNSSSubscriber>(nh, "/kitti/oxts/gps/fix", 1000000);
         lidar_to_imu_ptr_ = std::make_shared<TFListener>(nh, "imu_link", "velo_link");
-        // lidar_to_imu_ptr_ = std::make_shared<TFListener>(nh, "velo_link", "imu_link");
+        //lidar_to_imu_ptr_ = std::make_shared<TFListener>(nh, "velo_link", "imu_link");
 
         cloud_pub_ptr_ = std::make_shared<CloudPublisher>(nh, "current_scan", 100, "/map");
         local_map_pub_ptr_ = std::make_shared<CloudPublisher>(nh, "local_map", 100, "/map");
@@ -22,6 +22,7 @@ namespace lidar_slam {
         gnss_pub_ptr_ = std::make_shared<OdometryPublisher>(nh, "gnss", "map", "lidar", 100);
 
         front_end_ptr_ = std::make_shared<FrontEnd>();
+        distortion_adjust_ptr_ = std::make_shared<DistortionAdjust>();
 
         local_map_ptr_.reset(new CloudData::CLOUD());
         global_map_ptr_.reset(new CloudData::CLOUD());
@@ -54,6 +55,7 @@ namespace lidar_slam {
 
     bool FrontEndFlow::ReadData() {
         cloud_sub_ptr_->ParseData(cloud_data_buff_);
+
         static std::deque<IMUData> unsynced_imu_;
         static std::deque<VelocityData> unsynced_velocity_;
         static std::deque<GNSSData> unsynced_gnss_;
@@ -124,7 +126,8 @@ namespace lidar_slam {
         current_velocity_data_ = velocity_data_buff_.front();
         current_gnss_data_ = gnss_data_buff_.front();
 
-        double d_time = current_cloud_data_.time - current_imu_data_.time;
+        //double d_time = current_cloud_data_.time - current_imu_data_.time;
+        double d_time = current_cloud_data_.time - current_velocity_data_.time;
         if (d_time < -0.05) {
             cloud_data_buff_.pop_front();
             return false;
@@ -159,6 +162,11 @@ namespace lidar_slam {
     }
 
     bool FrontEndFlow::UpdateLaserOdometry() {
+        current_velocity_data_.TransformCoordinate(lidar_to_imu_);
+        distortion_adjust_ptr_->SetMotionInfo(0.1, current_velocity_data_);
+        distortion_adjust_ptr_->AdjustCloud(current_cloud_data_.cloud_ptr,
+                                            current_cloud_data_.cloud_ptr);
+
         static bool front_end_pose_inited = false;
         if (!front_end_pose_inited) {
             front_end_pose_inited = true;

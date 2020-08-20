@@ -6,6 +6,8 @@
 */cmake-build-debug
 */idea
 */*idea
+.idea
+*/.idea/
 
 # Compiled object file
 *.o

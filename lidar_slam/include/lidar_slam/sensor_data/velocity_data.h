@@ -30,6 +30,7 @@ namespace lidar_slam {
     public:
         static bool SynData(std::deque<VelocityData>& UnsyncedData,
                             std::deque<VelocityData>& SyncedData, double sync_time);
+        void TransformCoordinate(Eigen::Matrix4f transform_matrix);
     };
 }
 
