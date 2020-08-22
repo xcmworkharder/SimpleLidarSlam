@@ -12,10 +12,17 @@ namespace lidar_slam {
     public:
         CloudPublisher(ros::NodeHandle& nh,
                        std::string topic_name,
-                       size_t buff_size,
-                       std::string frame_id);
+                       std::string frame_id,
+                       size_t buff_size
+                       );
         CloudPublisher() = default;
-        void Publish(const CloudData::CLOUD_PTR cloud_ptr_input);
+        void Publish(const CloudData::CLOUD_PTR& cloud_ptr_input, double time);
+        void Publish(const CloudData::CLOUD_PTR& cloud_ptr_input);
+
+        bool HasSubscribers();
+
+    private:
+        void PublishData(const CloudData::CLOUD_PTR& cloud_ptr_input, ros::Time time);
 
     private:
         ros::NodeHandle nh_;

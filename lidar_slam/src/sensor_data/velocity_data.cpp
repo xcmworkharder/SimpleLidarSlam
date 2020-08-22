@@ -5,7 +5,7 @@
 #include "glog/logging.h"
 
 namespace lidar_slam {
-    bool VelocityData::SynData(std::deque<VelocityData>& UnsyncedData,
+    bool VelocityData::SyncData(std::deque<VelocityData>& UnsyncedData,
                                std::deque<VelocityData>& SyncedData,
                                double sync_time) {
         while (UnsyncedData.size() >= 2) {

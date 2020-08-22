@@ -9,7 +9,6 @@ namespace lidar_slam {
 
     NDTRegistration::NDTRegistration(const YAML::Node& node)
             : ndt_ptr_(new pcl::NormalDistributionsTransform<CloudData::POINT, CloudData::POINT>()) {
-
         float res = node["res"].as<float>();
         float step_size = node["step_size"].as<float>();
         float trans_eps = node["trans_eps"].as<float>();
@@ -19,8 +18,7 @@ namespace lidar_slam {
     }
 
     NDTRegistration::NDTRegistration(float res, float step_size, float trans_eps, int max_iter)
-            :ndt_ptr_(new pcl::NormalDistributionsTransform<CloudData::POINT, CloudData::POINT>()) {
-
+            : ndt_ptr_(new pcl::NormalDistributionsTransform<CloudData::POINT, CloudData::POINT>()) {
         SetRegistrationParam(res, step_size, trans_eps, max_iter);
     }
 

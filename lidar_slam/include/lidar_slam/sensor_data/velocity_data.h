@@ -28,7 +28,7 @@ namespace lidar_slam {
         AngularVelocity angular_velocity;
 
     public:
-        static bool SynData(std::deque<VelocityData>& UnsyncedData,
+        static bool SyncData(std::deque<VelocityData>& UnsyncedData,
                             std::deque<VelocityData>& SyncedData, double sync_time);
         void TransformCoordinate(Eigen::Matrix4f transform_matrix);
     };

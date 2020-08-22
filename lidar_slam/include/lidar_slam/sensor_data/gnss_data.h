@@ -2,8 +2,6 @@
 #define LIDAR_LOCALIZATION_SENSOR_DATA_GNSS_DATA_H_
 
 #include <deque>
-#include <vector>
-#include <string>
 
 #include "Geocentric/LocalCartesian.hpp"
 
@@ -32,7 +30,6 @@ namespace lidar_slam {
         void UpdateXYZ();
         static bool SyncData(std::deque<GNSSData>& UnsyncedData,
                              std::deque<GNSSData>& SyncedData, double sync_time);
-
     };
 }
 #endif
