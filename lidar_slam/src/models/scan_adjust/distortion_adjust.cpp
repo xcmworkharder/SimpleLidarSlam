@@ -19,7 +19,7 @@ namespace lidar_slam {
                                        CloudData::CLOUD_PTR& output_cloud_ptr) {
         CloudData::CLOUD_PTR origin_cloud_ptr(new CloudData::CLOUD(*input_cloud_ptr));
         output_cloud_ptr.reset(new CloudData::CLOUD());
-        //output_cloud_ptr->points.clear(); // 如果使用这句话，rviz启动会在data_preprocess处process has died错误
+        //output_cloud_ptr->points.clear(); // 这里在rviz启动会在data_preprocess处process has died错误
 
         float orientation_space = 2.0 * M_PI;
         float delete_space = 5.0 * M_PI / 180.0; // 5°

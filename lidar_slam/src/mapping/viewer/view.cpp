@@ -62,11 +62,8 @@ namespace lidar_slam {
         return true;
     }
 
-    bool Viewer::Update(std::deque<KeyFrame>& new_key_frames,
-                        std::deque<KeyFrame>& optimized_key_frames,
-                        PoseData transformed_data,
-                        CloudData cloud_data) {
-        ResetParam();
+    bool Viewer::UpdateWithOptimizedKeyFrames(std::deque<KeyFrame>& optimized_key_frames) {
+        has_new_global_map_ = false;
 
         if (optimized_key_frames.size() > 0) {
             optimized_key_frames_ = optimized_key_frames;
@@ -75,8 +72,21 @@ namespace lidar_slam {
             has_new_global_map_ = true;
         }
 
-        if (new_key_frames.size()) {
-            all_key_frames_.insert(all_key_frames_.end(), new_key_frames.begin(), new_key_frames.end());
+        return has_new_global_map_;
+    }
+
+    bool Viewer::UpdateWithNewKeyFrame(std::deque<KeyFrame>& new_key_frames,
+                                       const PoseData& transformed_data,
+                                       CloudData& cloud_data) {
+        has_new_local_map_ = false;
+
+        if (new_key_frames.size() > 0) {
+            KeyFrame key_frame;
+            for (size_t i = 0; i < new_key_frames.size(); ++i) {
+                key_frame = new_key_frames.at(i);
+                key_frame.pose = pose_to_optimize_ * key_frame.pose;
+                all_key_frames_.push_back(key_frame);
+            }
             new_key_frames.clear();
             has_new_local_map_ = true;
         }
@@ -90,18 +100,13 @@ namespace lidar_slam {
         return true;
     }
 
-    void Viewer::ResetParam() {
-        has_new_local_map_ = false;
-        has_new_global_map_ = false;
-    }
-
     bool Viewer::OptimizeKeyFrames() {
         size_t optimized_index = 0;
         size_t all_index = 0;
         while (optimized_index < optimized_key_frames_.size() && all_index < all_key_frames_.size()) {
             if (optimized_key_frames_.at(optimized_index).index < all_key_frames_.at(all_index).index) {
                 optimized_index ++;
-            } else if (optimized_key_frames_.at(optimized_index).index > all_key_frames_.at(all_index).index) {
+            } else if (optimized_key_frames_.at(optimized_index).index < all_key_frames_.at(all_index).index) {
                 all_index ++;
             } else {
                 pose_to_optimize_ = optimized_key_frames_.at(optimized_index).pose * all_key_frames_.at(all_index).pose.inverse();

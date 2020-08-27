@@ -26,12 +26,17 @@ namespace lidar_slam {
             return false;
 
         while(HasData()) {
-            if (!ValidData())
-                continue;
-
-            if (UpdateViewer()) {
-                PublishData();
+            if (ValidData()) {
+                viewer_ptr_->UpdateWithNewKeyFrame(key_frame_buff_,
+                                                   current_transformed_odom_,
+                                                   current_cloud_data_);
+                PublishLocalData();
             }
+        }
+
+        if (optimized_key_frames_.size() > 0) {
+            viewer_ptr_->UpdateWithOptimizedKeyFrames(optimized_key_frames_);
+            PublishGlobalData();
         }
 
         return true;
@@ -77,14 +82,17 @@ namespace lidar_slam {
         return true;
     }
 
-    bool ViewerFlow::UpdateViewer() {
-        return viewer_ptr_->Update(key_frame_buff_,
-                                   optimized_key_frames_,
-                                   current_transformed_odom_,
-                                   current_cloud_data_);
+    bool ViewerFlow::PublishGlobalData() {
+        if (viewer_ptr_->HasNewGlobalMap() && global_map_pub_ptr_->HasSubscribers()) {
+            CloudData::CLOUD_PTR cloud_ptr(new CloudData::CLOUD());
+            viewer_ptr_->GetGlobalMap(cloud_ptr);
+            global_map_pub_ptr_->Publish(cloud_ptr);
+        }
+
+        return true;
     }
 
-    bool ViewerFlow::PublishData() {
+    bool ViewerFlow::PublishLocalData() {
         optimized_odom_pub_ptr_->Publish(viewer_ptr_->GetCurrentPose());
         current_scan_pub_ptr_->Publish(viewer_ptr_->GetCurrentScan());
 
@@ -92,12 +100,6 @@ namespace lidar_slam {
             CloudData::CLOUD_PTR cloud_ptr(new CloudData::CLOUD());
             viewer_ptr_->GetLocalMap(cloud_ptr);
             local_map_pub_ptr_->Publish(cloud_ptr);
-        }
-
-        if (viewer_ptr_->HasNewGlobalMap() && global_map_pub_ptr_->HasSubscribers()) {
-            CloudData::CLOUD_PTR cloud_ptr(new CloudData::CLOUD());
-            viewer_ptr_->GetGlobalMap(cloud_ptr);
-            global_map_pub_ptr_->Publish(cloud_ptr);
         }
 
         return true;

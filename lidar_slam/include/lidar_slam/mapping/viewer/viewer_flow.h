@@ -30,8 +30,8 @@ namespace lidar_slam {
         bool ReadData();
         bool HasData();
         bool ValidData();
-        bool UpdateViewer();
-        bool PublishData();
+        bool PublishGlobalData();
+        bool PublishLocalData();
 
     private:
         // subscriber
