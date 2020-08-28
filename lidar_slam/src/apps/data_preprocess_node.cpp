@@ -17,8 +17,11 @@ int main(int argc, char *argv[]) {
     ros::init(argc, argv, "data_preprocess_node");
     ros::NodeHandle nh;
 
+    std::string cloud_topic;
+    nh.param<std::string>("cloud_topic", cloud_topic, "/synced_cloud");
+
     std::shared_ptr<DataPreprocessFlow> data_preprocess_flow_ptr =
-            std::make_shared<DataPreprocessFlow>(nh);
+            std::make_shared<DataPreprocessFlow>(nh, cloud_topic);
 
     ros::Rate rate(100);
     while (ros::ok()) {
