@@ -14,8 +14,10 @@ namespace lidar_slam {
         VoxelFilter(const YAML::Node& node);
         VoxelFilter(float lear_size_x, float leaf_size_y, float leaf_size_z);
 
-        bool Filter(const CloudData::CLOUD_PTR& input_cloud_ptr,
+        bool Filter(CloudData::CLOUD_PTR& input_cloud_ptr,
                     CloudData::CLOUD_PTR& filtered_cloud_ptr) override;
+//        bool Filter(const CloudData::CLOUD_PTR& input_cloud_ptr,
+//                    CloudData::CLOUD_PTR& filtered_cloud_ptr) override;
 
     private:
         bool SetFilterParam(float leaf_size_x, float leaf_size_y, float leaf_size_z);

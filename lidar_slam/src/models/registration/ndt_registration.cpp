@@ -28,7 +28,8 @@ namespace lidar_slam {
         ndt_ptr_->setTransformationEpsilon(trans_eps);
         ndt_ptr_->setMaximumIterations(max_iter);
 
-        LOG(INFO) << "NDT 的匹配参数为：" << std::endl
+//        LOG(INFO) << "NDT 的匹配参数为：" << std::endl
+        std::cout << "NDT 的匹配参数为：" << std::endl
                   << "res: " << res << ", "
                   << "step_size: " << step_size << ", "
                   << "trans_eps: " << trans_eps << ", "
@@ -53,5 +54,9 @@ namespace lidar_slam {
         result_pose = ndt_ptr_->getFinalTransformation();
 
         return true;
+    }
+
+    float NDTRegistration::GetFitnessScore() {
+        return ndt_ptr_->getFitnessScore();
     }
 }

@@ -6,6 +6,10 @@
 #include "glog/logging.h"
 
 #include "lidar_slam/global_defination/global_defination.h"
+#include "lidar_slam/tools/print_info.h"
+#include "lidar_slam/models/registration/ndt_registration.h"
+#include "lidar_slam/models/cloud_filter/voxel_filter.h"
+#include "lidar_slam/models/cloud_filter/no_filter.h"
 
 namespace lidar_slam {
     FrontEnd::FrontEnd()
@@ -15,8 +19,10 @@ namespace lidar_slam {
     }
 
     bool FrontEnd::InitWithConfig() {
-        std::string config_file_path = WORK_SPACE_PATH + "/config/front_end/config.yaml";
+        std::string config_file_path = WORK_SPACE_PATH + "/config/mapping/front_end.yaml";
         YAML::Node config_node = YAML::LoadFile(config_file_path);
+
+        std::cout << "---------------前端初始化----------------" << std::endl;
 
         InitParam(config_node);
         InitRegistration(registration_ptr_, config_node);
@@ -35,7 +41,8 @@ namespace lidar_slam {
 
     bool FrontEnd::InitRegistration(std::shared_ptr<RegistrationInterface>& registration_ptr, const YAML::Node& config_node) {
         std::string registration_method = config_node["registration_method"].as<std::string>();
-        LOG(INFO) << "点云匹配方式为：" << registration_method;
+        //LOG(INFO) << "点云匹配方式为：" << registration_method;
+        std::cout << "前端选择的匹配方式为: " << registration_method << std::endl;
 
         if (registration_method == "NDT") {
             registration_ptr = std::make_shared<NDTRegistration>(config_node[registration_method]);
@@ -49,10 +56,13 @@ namespace lidar_slam {
 
     bool FrontEnd::InitFilter(std::string filter_user, std::shared_ptr<CloudFilterInterface>& filter_ptr, const YAML::Node& config_node) {
         std::string filter_mothod = config_node[filter_user + "_filter"].as<std::string>();
-        LOG(INFO) << "front_" + filter_user << "选择的滤波方法为：" << filter_mothod;
+        //LOG(INFO) << "front_" + filter_user << "选择的滤波方法为：" << filter_mothod;
+        std::cout << "前端" << filter_user << "选择的滤波方法为: " << filter_mothod << std::endl;
 
         if (filter_mothod == "voxel_filter") {
             filter_ptr = std::make_shared<VoxelFilter>(config_node[filter_mothod][filter_user]);
+        } else if (filter_mothod == "no_filter") {
+            filter_ptr = std::make_shared<NoFilter>();
         } else {
             LOG(ERROR) << "没有为 " << filter_user << " 找到与 " << filter_mothod << " 相对应的滤波方法!";
             return false;

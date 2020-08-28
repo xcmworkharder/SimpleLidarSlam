@@ -7,8 +7,8 @@
 #include <yaml-cpp/yaml.h>
 
 #include "lidar_slam/sensor_data/cloud_data.h"
-#include "lidar_slam/models/registration/ndt_registration.h"
-#include "lidar_slam/models/cloud_filter/voxel_filter.h"
+#include "lidar_slam/models/registration/registration_interface.h"
+#include "lidar_slam/models/cloud_filter/cloud_filter_interface.h"
 
 namespace lidar_slam {
     class FrontEnd {

@@ -7,7 +7,7 @@
 
 #include <deque>
 #include <ros/ros.h>
-#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 
 #include "lidar_slam/sensor_data/key_frame.h"
 
@@ -19,7 +19,7 @@ namespace lidar_slam {
         void ParseData(std::deque<KeyFrame>& key_frame_buff);
 
     private:
-        void msg_callback(const geometry_msgs::PoseStampedConstPtr& key_frame_msg_ptr);
+        void msg_callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr& key_frame_msg_ptr);
 
     private:
         ros::NodeHandle nh_;

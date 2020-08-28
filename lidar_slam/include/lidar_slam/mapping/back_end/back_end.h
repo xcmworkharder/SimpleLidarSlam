@@ -11,6 +11,7 @@
 #include "lidar_slam/sensor_data/cloud_data.h"
 #include "lidar_slam/sensor_data/pose_data.h"
 #include "lidar_slam/sensor_data/key_frame.h"
+#include "lidar_slam/sensor_data/loop_pose.h"
 
 #include "lidar_slam/models/graph_optimizer/g2o/g2o_graph_optimizer.h"
 
@@ -19,14 +20,16 @@ namespace lidar_slam {
     public:
         BackEnd();
 
-        bool Update(const CloudData& cloud_data, const PoseData& laser_odom,
-                    const PoseData& gnss_pose);
-
+        bool Update(const CloudData& cloud_data, const PoseData& laser_odom, const PoseData& gnss_pose);
+        bool InsertLoopPose(const LoopPose& loop_pose);
         bool ForceOptimize();
+
+        //bool ForceOptimize();
         void GetOptimizedKeyFrames(std::deque<KeyFrame>& key_frames_deque);
         bool HasNewKeyFrame();
         bool HasNewOptimized();
         void GetLatestKeyFrame(KeyFrame& key_frame);
+        void GetLatestKeyGNSS(KeyFrame& key_frame);
 
     private:
         bool InitWithConfig();
@@ -35,10 +38,14 @@ namespace lidar_slam {
         bool InitDataPath(const YAML::Node& config_node);
 
         void ResetParam();
-        bool SaveTrajectory(const PoseData& laser_odom, const PoseData& gnss_pose);
+        bool SavePose(std::ofstream& ofs, const Eigen::Matrix4f& pose);
+        //bool SaveTrajectory(const PoseData& laser_odom, const PoseData& gnss_pose);
         bool AddNodeAndEdge(const PoseData& gnss_data);
-        bool MaybeNewKeyFrame(const CloudData& cloud_data, const PoseData& laser_odom);
+        bool MaybeNewKeyFrame(const CloudData& cloud_data,
+                              const PoseData& laser_odom,
+                              const PoseData& gnss_pose);
         bool MaybeOptimized();
+        bool SaveOptimizedPose();
 
     private:
         std::string key_frames_path_ = "";
@@ -46,17 +53,17 @@ namespace lidar_slam {
 
         std::ofstream ground_truth_ofs_;
         std::ofstream laser_odom_ofs_;
+        std::ofstream optimized_pose_ofs_;
 
         float key_frame_distance_ = 2.0;
-        int optimize_step_with_none_ = 100;
-        int optimize_step_with_gnss_ = 100;
-        int optimize_step_with_loop_ = 10;
 
         bool has_new_key_frame_ = false;
         bool has_new_optimized_ = false;
 
         KeyFrame current_key_frame_;
+        KeyFrame current_key_gnss_;
         std::deque<KeyFrame> key_frames_deque_;
+        std::deque<Eigen::Matrix4f> optimized_pose_;
 
         /// 优化器
         std::shared_ptr<GraphOptimizerInterface> graph_optimizer_ptr_;

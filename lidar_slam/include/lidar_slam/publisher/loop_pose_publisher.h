@@ -1,25 +1,27 @@
 //
-// Created by xcmworkharder on 2020-08-21 上午10:07.
+// Created by xcmworkharder on 2020-08-27 下午4:52.
 //
 
-#ifndef LIDAR_SLAM_KEY_FRAME_PUBLISHER_H
-#define LIDAR_SLAM_KEY_FRAME_PUBLISHER_H
+#ifndef LIDAR_SLAM_LOOP_POSE_PUBLISHER_H
+#define LIDAR_SLAM_LOOP_POSE_PUBLISHER_H
 
 #include <string>
 #include <ros/ros.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 
-#include "lidar_slam/sensor_data/key_frame.h"
+#include "lidar_slam/sensor_data/loop_pose.h"
 
 namespace lidar_slam {
-    class KeyFramePublisher {
+    class LoopPosePublisher {
     public:
-        KeyFramePublisher(ros::NodeHandle& nh,
+        LoopPosePublisher(ros::NodeHandle& nh,
                           std::string topic_name,
                           std::string frame_id,
                           int buff_size);
-        KeyFramePublisher() = default;
-        void Publish(KeyFrame& key_frame);
+        LoopPosePublisher() = default;
+
+        void Publish(LoopPose& loop_pose);
+
         bool HasSubscribers();
 
     private:
@@ -29,4 +31,4 @@ namespace lidar_slam {
     };
 }
 
-#endif //LIDAR_SLAM_KEY_FRAME_PUBLISHER_H
+#endif //LIDAR_SLAM_LOOP_POSE_PUBLISHER_H

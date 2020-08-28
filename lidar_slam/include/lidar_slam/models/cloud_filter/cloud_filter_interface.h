@@ -13,8 +13,8 @@ namespace lidar_slam {
     public:
         virtual ~CloudFilterInterface() = default;
 
-        virtual bool Filter(const CloudData::CLOUD_PTR& input_cloud_ptr,
-                            CloudData::CLOUD_PTR& filtered_cloud_ptr) = 0;
+        virtual bool Filter(CloudData::CLOUD_PTR& input_cloud_ptr, CloudData::CLOUD_PTR& filtered_cloud_ptr) = 0;
+        //virtual bool Filter(const CloudData::CLOUD_PTR& input_cloud_ptr, CloudData::CLOUD_PTR& filtered_cloud_ptr) = 0;
     };
 }
 
