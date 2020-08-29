@@ -11,6 +11,7 @@ namespace lidar_slam {
 
     void GNSSSubscriber::msg_callback(
             const sensor_msgs::NavSatFixConstPtr& nav_sat_fix_ptr) {
+        buff_mutex_.lock();
         GNSSData gnssData;
         gnssData.time = nav_sat_fix_ptr->header.stamp.toSec();
         gnssData.latitude = nav_sat_fix_ptr->latitude;
@@ -20,13 +21,16 @@ namespace lidar_slam {
         gnssData.service = nav_sat_fix_ptr->status.service;
 
         new_gnss_data_.push_back(gnssData);
+        buff_mutex_.unlock();
     }
 
     void GNSSSubscriber::ParseData(std::deque<GNSSData>& gnss_data_buff) {
+        buff_mutex_.lock();
         if (new_gnss_data_.size() > 0) {
             gnss_data_buff.insert(gnss_data_buff.end(),
                                   new_gnss_data_.begin(), new_gnss_data_.end());
             new_gnss_data_.clear();
         }
+        buff_mutex_.unlock();
     }
 }

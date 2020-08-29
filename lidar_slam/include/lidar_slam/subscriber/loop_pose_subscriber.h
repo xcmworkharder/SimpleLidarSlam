@@ -6,6 +6,8 @@
 #define LIDAR_SLAM_LOOP_POSE_SUBSCRIBER_H
 
 #include <deque>
+#include <mutex>
+#include <thread>
 #include <ros/ros.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 
@@ -26,6 +28,7 @@ namespace lidar_slam {
         ros::Subscriber subscriber_;
 
         std::deque<LoopPose> new_loop_pose_;
+        std::mutex buff_mutex_;
     };
 }
 

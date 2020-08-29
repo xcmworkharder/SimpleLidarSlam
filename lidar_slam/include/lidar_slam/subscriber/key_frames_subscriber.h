@@ -6,6 +6,8 @@
 #define LIDAR_SLAM_KEY_FRAMES_SUBSCRIBER_H
 
 #include <deque>
+#include <mutex>
+#include <thread>
 #include <ros/ros.h>
 #include <nav_msgs/Path.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -27,6 +29,7 @@ namespace lidar_slam {
         ros::Subscriber subscriber_;
 
         std::deque<KeyFrame> new_key_frames_;
+        std::mutex buff_mutex_;
     };
 }
 

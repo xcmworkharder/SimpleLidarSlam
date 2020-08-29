@@ -5,6 +5,8 @@
 #define LIDAR_SLAM_VELOCITY_SUBSCRIBER_H
 
 #include <deque>
+#include <mutex>
+#include <thread>
 #include <ros/ros.h>
 #include "geometry_msgs/TwistStamped.h"
 #include "lidar_slam/sensor_data/velocity_data.h"
@@ -24,6 +26,7 @@ namespace lidar_slam {
         ros::Subscriber subscriber_;
 
         std::deque<VelocityData> new_velocity_data_;
+        std::mutex buff_mutex_;
     };
 }
 

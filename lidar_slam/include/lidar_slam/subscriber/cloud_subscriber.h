@@ -2,6 +2,8 @@
 #define LIDAR_LOCALIZATION_SUBSCRIBER_CLOUD_SUBSCRIBER_H_
 
 #include <deque>
+#include <mutex>
+#include <thread>
 #include <ros/ros.h>
 #include <sensor_msgs/PointCloud2.h>
 #include <pcl/point_types.h>
@@ -22,6 +24,7 @@ namespace lidar_slam {
     private:
         ros::NodeHandle nh_;
         ros::Subscriber subscriber_;
+        std::mutex buff_mutex_;
 
         std::deque<CloudData> new_cloud_data_;
     };

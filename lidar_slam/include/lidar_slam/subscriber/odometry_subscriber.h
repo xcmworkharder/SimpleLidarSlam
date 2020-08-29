@@ -6,6 +6,8 @@
 #define LIDAR_SLAM_ODOMETRY_SUBSCRIBER_H
 
 #include <deque>
+#include <mutex>
+#include <thread>
 #include <ros/ros.h>
 #include <nav_msgs/Odometry.h>
 #include "lidar_slam/sensor_data/pose_data.h"
@@ -25,6 +27,7 @@ namespace lidar_slam {
         ros::Subscriber subscriber_;
 
         std::deque<PoseData> new_pose_data_;
+        std::mutex buff_mutex_;
     };
 }
 

@@ -8,6 +8,7 @@
 #include "glog/logging.h"
 
 #include "lidar_slam/tools/file_manager.h"
+#include "lidar_slam/models/cloud_filter/voxel_filter.h"
 #include "lidar_slam/global_defination/global_defination.h"
 
 namespace lidar_slam {
@@ -43,8 +44,12 @@ namespace lidar_slam {
         key_frames_path_ = data_path + "/slam_data/key_frames";
         map_path_ = data_path + "/slam_data/map";
 
-        if (!FileManager::InitDirectory(map_path_, "点云地图文件"))
+        if (!FileManager::CreateDirectory(map_path_, "点云地图文件")) {
             return false;
+        }
+
+//        if (!FileManager::InitDirectory(map_path_, "点云地图文件"))
+//            return false;
 
         return true;
     }
@@ -162,14 +167,21 @@ namespace lidar_slam {
     bool Viewer::SaveMap() {
         if (optimized_key_frames_.size() == 0)
             return false;
-
+        // 生成地图
         CloudData::CLOUD_PTR global_map_ptr(new CloudData::CLOUD());
         JointCloudMap(optimized_key_frames_, global_map_ptr);
-
+        // 保存原地图
         std::string map_file_path = map_path_ + "/map.pcd";
         pcl::io::savePCDFileBinary(map_file_path, *global_map_ptr);
+        // 保存滤波后地图
+        if (global_map_ptr->points.size() > 1000000) {
+            std::shared_ptr<VoxelFilter> map_filter_ptr = std::make_shared<VoxelFilter>(0.5, 0.5, 0.5);
+            map_filter_ptr->Filter(global_map_ptr, global_map_ptr);
+        }
+        std::string filtered_map_file_path = map_path_ + "/filtered_map.pcd";
+        pcl::io::savePCDFileBinary(filtered_map_file_path, *global_map_ptr);
 
-        LOG(INFO) << "地图保存完成，地址是：" << std::endl << map_file_path << std::endl << std::endl;
+        LOG(INFO) << "地图保存完成，地址是：" << std::endl << map_path_ << std::endl << std::endl;
 
         return true;
     }

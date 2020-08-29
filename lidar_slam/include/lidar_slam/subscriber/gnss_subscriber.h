@@ -2,6 +2,8 @@
 #define LIDAR_LOCALIZATION_SUBSCRIBER_GNSS_SUBSCRIBER_H_
 
 #include <deque>
+#include <mutex>
+#include <thread>
 #include <ros/ros.h>
 #include "sensor_msgs/NavSatFix.h"
 #include "lidar_slam/sensor_data/gnss_data.h"
@@ -19,6 +21,7 @@ namespace lidar_slam {
     private:
         ros::NodeHandle nh_;
         ros::Subscriber subscriber_;
+        std::mutex buff_mutex_;
 
         std::deque<GNSSData> new_gnss_data_;
     };
